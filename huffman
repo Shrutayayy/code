@@ -1,0 +1,162 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+// Structure to represent a symbol with alphabet and frequency
+struct SYMBOL {
+    char alphabet;
+    int frequency;
+};
+
+// Structure to represent a node in the Huffman tree
+struct Node {
+    struct SYMBOL symbol;
+    struct Node* left;
+    struct Node* right;
+};
+
+// Structure for the Min-Priority Queue (Min-Heap)
+struct MinPriorityQueue {
+    int size;
+    struct Node** array;
+};
+
+// Function to create a new node for the Huffman tree
+struct Node* newNode(struct SYMBOL symbol) {
+    struct Node* node = (struct Node*)malloc(sizeof(struct Node));
+    node->symbol = symbol;
+    node->left = NULL;
+    node->right = NULL;
+    return node;
+}
+
+// Function to create a new Min-Priority Queue node
+struct Node* createMinPriorityQueueNode(struct SYMBOL symbol) {
+    struct Node* node = newNode(symbol);
+    return node;
+}
+
+// Function to swap two nodes
+void swapNodes(struct Node** a, struct Node** b) {
+    struct Node* temp = *a;
+    *a = *b;
+    *b = temp;
+}
+
+// Min-Heapify function to maintain the Min-Heap property
+void minHeapify(struct MinPriorityQueue* minHeap, int idx) {
+    int smallest = idx;
+    int left = 2 * idx + 1;
+    int right = 2 * idx + 2;
+
+    if (left < minHeap->size &&
+        minHeap->array[left]->symbol.frequency < minHeap->array[smallest]->symbol.frequency) {
+        smallest = left;
+    }
+
+    if (right < minHeap->size &&
+        minHeap->array[right]->symbol.frequency < minHeap->array[smallest]->symbol.frequency) {
+        smallest = right;
+    }
+
+    if (smallest != idx) {
+        swapNodes(&minHeap->array[smallest], &minHeap->array[idx]);
+        minHeapify(minHeap, smallest);
+    }
+}
+
+// Function to build the Min-Priority Queue
+struct MinPriorityQueue* buildMinPriorityQueue(struct SYMBOL symbols[], int size) {
+    struct MinPriorityQueue* minHeap = (struct MinPriorityQueue*)malloc(sizeof(struct MinPriorityQueue));
+    minHeap->size = size;
+    minHeap->array = (struct Node*)malloc(size * sizeof(struct Node));
+
+    for (int i = 0; i < size; ++i) {
+        minHeap->array[i] = createMinPriorityQueueNode(symbols[i]);
+    }
+
+    // Build the Min-Heap
+    for (int i = size / 2 - 1; i >= 0; i--) {
+        minHeapify(minHeap, i);
+    }
+
+    return minHeap;
+}
+
+// Function to extract the minimum node from the Min-Priority Queue
+struct Node* extractMin(struct MinPriorityQueue* minHeap) {
+    struct Node* minNode = minHeap->array[0];
+    minHeap->array[0] = minHeap->array[minHeap->size - 1];
+    minHeap->size--;
+    minHeapify(minHeap, 0);
+    return minNode;
+}
+
+// Function to insert a node into the Min-Priority Queue
+void insert(struct MinPriorityQueue* minHeap, struct Node* node) {
+    minHeap->size++;
+    int i = minHeap->size - 1;
+    while (i > 0 && node->symbol.frequency < minHeap->array[(i - 1) / 2]->symbol.frequency) {
+        minHeap->array[i] = minHeap->array[(i - 1) / 2];
+        i = (i - 1) / 2;
+    }
+    minHeap->array[i] = node;
+}
+
+// Function to build the Huffman tree
+struct Node* buildHuffmanTree(struct SYMBOL symbols[], int size) {
+    struct Node *left, *right, *top;
+    struct MinPriorityQueue* minHeap = buildMinPriorityQueue(symbols, size);
+
+    while (minHeap->size > 1) {
+        left = extractMin(minHeap);
+        right = extractMin(minHeap);
+
+        // Create a new internal node with a frequency equal to the sum of the frequencies of the two nodes.
+        // The nodes will become the left and right subtrees of the new node.
+        top = createMinPriorityQueueNode((struct SYMBOL){'\0', left->symbol.frequency + right->symbol.frequency});
+        top->left = left;
+        top->right = right;
+
+        insert(minHeap, top);
+    }
+
+    // The remaining node is the root of the Huffman tree.
+    return extractMin(minHeap);
+}
+
+// Function for in-order traversal of the Huffman tree
+void inOrderTraversal(struct Node* root) {
+    if (root) {
+        inOrderTraversal(root->left);
+        if (root->symbol.alphabet != '\0') {
+            printf("%c ", root->symbol.alphabet);
+        }
+        inOrderTraversal(root->right);
+    }
+}
+
+int main() {
+    int n;
+    printf("Enter the number of distinct alphabets: ");
+    scanf("%d", &n);
+
+    struct SYMBOL symbols[n];
+    printf("Enter the alphabets: ");
+    for (int i = 0; i < n; i++) {
+        scanf(" %c", &symbols[i].alphabet);
+    }
+
+    printf("Enter their frequencies: ");
+    for (int i = 0; i < n; i++) {
+        scanf("%d", &symbols[i].frequency);
+    }
+
+    struct Node* root = buildHuffmanTree(symbols, n);
+
+    printf("In-order traversal of the tree (Huffman): ");
+    inOrderTraversal(root);
+
+    printf("\n");
+
+    return 0;
+}
