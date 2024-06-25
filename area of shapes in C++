@@ -1,0 +1,61 @@
+#include <iostream>
+using namespace std;
+
+class shape
+{
+    public:
+    float a;
+
+};
+class circle : public shape
+{
+    public:
+    int r;
+    void area_circle()
+    {
+        cout<<"\n enter the radius: ";
+        cin>>r;
+        a =3.14*r*r;
+        cout<<"\n area of circle = "<<a<<"sq units";
+    }
+    
+};
+class triangle : public shape
+{
+    public:
+    int b,h;
+    void area_triangle()
+    {
+        cout<<"\n enter the base: ";
+        cin>>b;
+        cout<<"\n enter the height: ";
+        cin>>h;
+        a =0.5*b*h;
+        cout<<"\n area of triangle = "<<a<<"sq units";
+    }
+};
+class rectangle : public shape
+{
+    public:
+    int l,b;
+    void area_rectangle()
+    {
+        cout<<"\n enter length: ";
+        cin>>l;
+        cout<<"\nenter breadth: ";
+        cin>>b;
+        a =l*b;
+        cout<<"\n area of rectangle = "<<a<<"sq units";
+    }
+};
+
+int main()
+{
+    circle ob1;
+    ob1.area_circle();
+    triangle ob2;
+    ob2.area_triangle();
+    rectangle ob3;
+    ob3.area_rectangle();
+    return 0;
+}
