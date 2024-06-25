@@ -1,0 +1,57 @@
+#include <iostream>
+using namespace std;
+class employee
+{
+public:
+    char name[100];
+    int id;
+    int basicsalary;
+    void info()
+    {
+        cout << "enter the name\n"<< endl;
+        cin >> name;
+        cout << "enter the id \n"<< endl;
+        cin >> id;
+        cout << "enter the salary\n"<< endl;
+        cin >> basicsalary;
+    }
+};
+class regular : public employee
+{
+public:
+    float DA, HRA, salary;
+    void cal()
+    {
+        DA = 0.80 * basicsalary;
+        HRA = 0.10 * basicsalary;
+        salary = DA + HRA + basicsalary;
+        cout << "DA of the employee is" << DA << "\n"<< endl;
+        cout << "HRA of the employee is " << HRA << "\n" << endl;
+        cout << "salary of employee is " << salary << "\n"<< endl;
+    }
+};
+class partTime : public employee
+{
+public:
+    int hour, pph;
+    float totalpay;
+    float pay;
+    void abc()
+    {
+        cout << "enter the number of hours\n"<< endl;
+        cin >> hour;
+        cout << "enter the pay per hour\n"<< endl;
+        cin >> pph;
+        totalpay = hour * pph;
+        cout << "the total pay for part time is\n"<< totalpay << endl;
+    }
+};
+int main()
+{
+    employee ob1;
+    ob1.info();
+    regular ob2;
+    ob2.cal();
+    partTime ob3;
+    ob3.abc();
+}
