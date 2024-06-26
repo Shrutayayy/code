@@ -1,0 +1,16 @@
+#include <stdio.h>
+int numprint(int n)
+{
+    if (n >= 1 && n <= 10)
+    {
+        printf("%d", n);
+        numprint(n + 1);
+    }
+}
+int main()
+{
+    int n = 1;
+    printf("Value we will get: ");
+    numprint(n);
+    return 0;
+}
