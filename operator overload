@@ -1,0 +1,51 @@
+#include<iostream>
+using namespace std;
+
+class Distance
+{
+    int feet;
+    int inches;
+    public:
+
+    Distance()//default constructor
+    {
+        feet = 0;
+        inches = 0;
+    }
+
+    Distance(int x, int y)//parameterized constructor
+    {
+        feet = x;
+        inches = y;
+    }
+
+    void print()//prints
+    {
+        cout<<"Sum = "<<feet<<" feet and "<<inches<<" inches."<<endl;
+    }
+
+    Distance operator + (Distance ob)//binary o  ov
+    {
+        Distance sum;
+        sum.feet = feet + ob.feet;
+        sum.inches = inches + ob.inches;
+        while(sum.inches >= 12)
+        {
+            sum.inches -= 12;
+            sum.feet += 1;
+        }
+        return sum;
+    }
+};
+
+int main()
+{
+    Distance D1(3,14);
+    Distance D2(6,2);
+    Distance D3(5,7);
+    Distance D4;
+
+    D4 = D1+D2+D3;//15, 11
+    D4.print();
+
+}
