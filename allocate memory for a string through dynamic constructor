@@ -1,0 +1,35 @@
+#include<iostream>
+#include<string>
+using namespace std;
+
+class Namer
+{
+    string name;
+
+    public:
+    Namer()//default constructor
+    {
+        name = "";
+    }
+
+    Namer(string a)//parameterized constructor
+    {
+        name = a;
+    }
+
+    void operator + (Namer ob)//binary o ov
+    {
+        string add;//dynamic constructor
+        add = name + ob.name;
+        cout<<"Concatenated string = "<<add;
+    }
+};
+
+int main()
+{
+    Namer s1("shruti");
+    Namer s2("kumari");
+    
+    s1+s2;
+
+}
